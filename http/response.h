@@ -6,7 +6,7 @@
 class HTTPResp : HTTPProtocol {
     int statusCode;
     
-    public:
+public:
     void setStatusCode(int statusCode) { this->statusCode = statusCode; };
 };
 

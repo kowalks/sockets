@@ -6,17 +6,16 @@
 
 
 std::string HTTPReq::encode() {
-    std::ostringstream message;
+    std::stringstream message;
     std::string protocol = getProtocolVersion();
-    // std::vector <uint8_t> bytecode;
 
     message << method << " " << url << " " << protocol << "\r\n\r\n";
-    // std::memcpy(&bytecode, message.data(), message.length());
-    // std::cout << message << std::endl;
-    // return bytecode;
+    
     return message.str();
 }
 
-// HTTPResp parse(std::vector <uint8_t> bytecode) {
-//     return;
-// }
+std::vector <uint8_t> HTTPReq::bytecode() {
+    std::string message = encode();
+    std::vector <uint8_t> bytecode(message.begin(), message.end());
+    return bytecode;
+}
