@@ -6,19 +6,19 @@
 #include <iostream>
 
 #include "protocol.h"
+#include "../net/url.h"
 
 class HTTPReq : HTTPProtocol {
     Method method;
-    std::string host;
-    std::string dir;
-    std::string url;
+    Url url;
     std::map <std::string, std::string> headers;
+    std::string data;
 
 public:
     std::string encode();
     std::vector <uint8_t> bytecode();
 
-    void setURL(std::string url) { this->url = url; }
+    void setURL(Url url) { this->url = url; }
     void setMethod(Method method) { this->method = method; }
     void setHeader(std::string key, std::string value) { this->headers[key] = value; }
 };

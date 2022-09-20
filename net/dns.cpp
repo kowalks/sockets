@@ -8,7 +8,7 @@
 
 #include "dns.h"
 
-std::vector <std::string> dns_resolution(char *node, char *service) {
+std::vector <std::string> dns_resolution(std::string node, std::string service) {
     struct addrinfo hints;
     struct addrinfo* res;
     std::vector <std::string> ips;
@@ -21,7 +21,7 @@ std::vector <std::string> dns_resolution(char *node, char *service) {
     // funcao de obtencao do endereco via DNS - getaddrinfo 
     // funcao preenche o buffer "res" e obtem o codigo de resposta "status" 
     int status = 0;
-    if ((status = getaddrinfo(node, service, &hints, &res)) != 0) {
+    if ((status = getaddrinfo(node.c_str(), service.c_str(), &hints, &res)) != 0) {
         std::cerr << "getaddrinfo: " << gai_strerror(status) << std::endl;
         return std::vector <std::string>();
     }

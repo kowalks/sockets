@@ -15,6 +15,10 @@ class Url {
     } authority;
 
 public:
+    Url() { };
+    Url(std::string url) { parse(url); };
+    Url(char *url) { parse(std::string(url)); };
+    
     void parse(std::string url);
     void parseAuth (std::string auth);
 

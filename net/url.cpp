@@ -22,15 +22,16 @@ void Url::parse(std::string url) {
         scheme = url.substr(0,pos);
         url = url.substr(pos+1);
     } else {
-        std::cerr << "find: url parse error. did you forget 'http' protocol?" << std::endl;
+        std::cerr << "find: url parse warning. did you forget 'http' protocol?" << std::endl;
         scheme = std::string("http");
+        url = url.insert(0, "//");
     }
 
     
     if (url.substr(0,2).compare("//") == 0) {
         url = url.substr(2);
         if ((pos = url.find("/")) == std::string::npos) {
-            std::cerr << "find: url parse error. did you forget last '/'?" << std::endl;
+            std::cerr << "find: url parse warning. did you forget last '/'?" << std::endl;
             parseAuth(url);
             return;
         }

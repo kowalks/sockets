@@ -9,7 +9,13 @@ std::string HTTPReq::encode() {
     std::stringstream message;
     std::string protocol = getProtocolVersion();
 
-    message << method << " " << url << " " << protocol << "\r\n\r\n";
+    message << method << " " << url.getPath() << " " << protocol << std::endl;
+    message << "Host: " << url.getHost() << std::endl;
+    for (auto& header : headers)
+        message << header.first << ": " << header.second << std::endl;
+    message << std::endl;
+    
+    message << data;
     
     return message.str();
 }

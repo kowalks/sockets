@@ -3,6 +3,6 @@
 
 #include <vector>
 
-std::vector <std::string> dns_resolution(char *node, char *service);
+std::vector <std::string> dns_resolution(std::string node, std::string service);
 
 #endif
