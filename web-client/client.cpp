@@ -32,17 +32,17 @@ int main (int argc, char *argv[]) {
     // choosing first ip from now on.
     std::string ip = ips[0];
 
-    // Creating TCP socket
+    // creating TCP socket
     int sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
-    // Sock address structure
+    // socket address structure
     struct sockaddr_in serverAddr;
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(stoi(port));
     serverAddr.sin_addr.s_addr = inet_addr(ip.c_str());
     memset(serverAddr.sin_zero, '\0', sizeof(serverAddr.sin_zero));
 
-    // connects to server from socket
+    // connecting to server from socket
     if (connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
         perror("connect");
         return 2;
@@ -79,7 +79,7 @@ int main (int argc, char *argv[]) {
         return 5;
     }
 
-    // Saving into local dir
+    // saving into local dir (full response request)
     std::string path = url.getPath();
     if (path.empty() or path.compare("/") == 0)
         path = "index.html";
