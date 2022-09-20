@@ -17,6 +17,7 @@ void Url::parseAuth(std::string auth) {
 }
 
 void Url::parse(std::string url) {
+    // Parsing ':' scheme (protocol)
     auto pos = url.find(":");
     if (pos != std::string::npos) {
         scheme = url.substr(0,pos);
@@ -27,27 +28,28 @@ void Url::parse(std::string url) {
         url = url.insert(0, "//");
     }
 
-    
-    if (url.substr(0,2).compare("//") == 0) {
-        url = url.substr(2);
-        if ((pos = url.find("/")) == std::string::npos) {
-            std::cerr << "find: url parse warning. did you forget last '/'?" << std::endl;
-            parseAuth(url);
-            return;
-        }
-        
-        parseAuth(url.substr(0,pos));
-        url = url.substr(pos);
-    }
-
+    // Parsing '#' fragment
     if ((pos = url.find("#")) != std::string::npos) {
         fragment = url.substr(pos+1);
         url = url.substr(0,pos);
     }
 
+    // Parsing '?' query
     if ((pos = url.find("?")) != std::string::npos) {
         query = url.substr(pos+1);
         url = url.substr(0,pos);
+    }
+
+    if (url.substr(0,2).compare("//") == 0) {
+        url = url.substr(2);
+        if ((pos = url.find("/")) != std::string::npos) {
+            parseAuth(url.substr(0,pos));
+            url = url.substr(pos);
+        } else {
+            std::cerr << "find: url parse warning. did you forget last '/'?" << std::endl;
+            parseAuth(url);
+            return;
+        }
     }
 
     path = url;
