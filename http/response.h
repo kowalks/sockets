@@ -10,7 +10,9 @@ class HTTPResp : HTTPProtocol {
     std::string statusCode;
     std::string reasonPhrase;
     std::string body;
-    std::map <std::string, std::string> headers;
+
+    // TODO: parse into a map 
+    std::string headers;
 
 public:
     HTTPResp() { };
