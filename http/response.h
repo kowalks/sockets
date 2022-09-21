@@ -1,13 +1,27 @@
 #ifndef HTTP_RESPONSE_H
 #define HTTP_RESPONSE_H
 
+#include <map>
+
 #include "protocol.h"
 
 class HTTPResp : HTTPProtocol {
-    int statusCode;
-    
+    std::string protocol;
+    std::string statusCode;
+    std::string reasonPhrase;
+    std::string body;
+    std::map <std::string, std::string> headers;
+
 public:
-    void setStatusCode(int statusCode) { this->statusCode = statusCode; };
+    HTTPResp() { };
+    HTTPResp(std::string buff) { parse(buff); };
+    HTTPResp(char *buff) { parse(std::string(buff)); };
+    void parse(std::string buff);
+
+    int getStatusCode() {return stoi(statusCode); };
+    std::string getProtocol() { return protocol; };
+    std::string getReasonPhrase() { return reasonPhrase; };
+    std::string getBody() { return body; };
 };
 
 #endif

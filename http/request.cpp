@@ -13,11 +13,11 @@ std::string HTTPReq::encode() {
     if (path.empty())
         path = "/";
 
-    message << method << " " << path << " " << protocol << std::endl;
-    message << "Host: " << url.getHost() << std::endl;
+    message << method << " " << path << " " << protocol << "\r\n";
+    message << "Host: " << url.getHost() << "\r\n";
     for (auto& header : headers)
-        message << header.first << ": " << header.second << std::endl;
-    message << std::endl;
+        message << header.first << ": " << header.second << "\r\n";
+    message << "\r\n";
     
     message << data;
     

@@ -8,9 +8,7 @@ class HTTPProtocol {
 
 public:
     enum Method { GET, POST, PUT, DELETE, HEAD };
-    
     friend std::ostream& operator<<(std::ostream& os, Method m);
-    
 
     std::string getProtocolVersion() { return protocolVersion; };
 };
