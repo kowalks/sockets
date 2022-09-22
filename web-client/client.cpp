@@ -9,6 +9,7 @@
 #include <iostream>
 #include <fstream>
 
+#include "../io/file.h"
 #include "client.h"
 
 void WebClient::connect(std::string ip, std::string port) {
@@ -74,4 +75,20 @@ HTTPResp WebClient::send(HTTPReq req, int buffersize) {
 
     HTTPResp resp(message);
     return resp;
+}
+
+void WebClient::saveLocal(HTTPResp resp, Url url) {
+    std::cout << resp.getStatusCode() << " " << resp.getReasonPhrase() << std::endl;
+    if (resp.getStatusCode() == 200) {
+        // Normalizing path
+        std::string path = url.getPath();
+        if (path.empty() or path == "/")
+            path = "index.html";
+        else path.insert(0, ".");
+
+        std::cout << "\tsaving received message into " << path << std::endl;
+        savefile(path, resp.getBody());
+    } else {
+        std::cout << "\tcannot retrieve file" << std::endl;
+    }
 }

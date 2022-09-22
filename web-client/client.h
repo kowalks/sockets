@@ -3,6 +3,7 @@
 
 #include "../http/request.h"
 #include "../http/response.h"
+#include "../net/url.h"
 
 class WebClient {
     int sockfd;
@@ -12,6 +13,8 @@ public:
     void disconnect();
     void client_ip_info();
     HTTPResp send(HTTPReq req, int buffersize = 65535);
+
+    static void saveLocal(HTTPResp resp, Url url);
 };
 
 #endif

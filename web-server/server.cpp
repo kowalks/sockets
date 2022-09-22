@@ -87,6 +87,13 @@ HTTPResp WebServer::serveLocalFiles(HTTPReq req) {
 
     if (req.method == HTTPReq::GET) {
         auto path = req.url.getPath();
+
+        // Normalizing path
+        if (path.empty() or path == "/")
+            path = "./index.html";
+        if (path[0] == '/')
+            path = path.insert(0, ".");
+
         auto body = rtrvfile(path);
         if (body.empty()) {
             resp.setStatusCode(404);
@@ -94,6 +101,7 @@ HTTPResp WebServer::serveLocalFiles(HTTPReq req) {
         } else {
             resp.setStatusCode(200);
             std::cout << "\tstatus code 200 OK" << std::endl;
+            std::cout << "\tsending file " << path << std::endl;
             resp.setBody(body);
         }
     } else {

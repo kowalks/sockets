@@ -36,24 +36,15 @@ int main (int argc, char *argv[]) {
     client.connect(ip, port);
 
     // building the request
-    HTTPReq req;
-    req.method = HTTPReq::GET;
-    req.url = url;
+    HTTPReq req(HTTPReq::GET, url);
 
     // sending request and receiving response
     HTTPResp resp = client.send(req);
-    
 
     // saving into local dir (full response request)
-    std::string path = url.getPath();
-    if (path.empty() or path == "/")
-        path = "index.html";
-    else path.insert(0, ".");
-    std::cout << "Saving received message into " << path << std::endl;
-    std::ofstream file(path);
-    file << resp.getBody();
-    file.close();
+    WebClient::saveLocal(resp, url);
 
+    // closing connection
     client.disconnect();
 
     return 0;

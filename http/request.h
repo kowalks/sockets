@@ -29,6 +29,7 @@ private:
 
 public:
     HTTPReq() {};
+    HTTPReq(Method method, Url url) : method(method), url(url) {};
     HTTPReq(std::string buff) { parse(buff); };
     HTTPReq(char *buff) { parse(std::string(buff)); };
     

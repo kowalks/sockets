@@ -5,4 +5,6 @@
 
 std::string rtrvfile(std::string path);
 
+void savefile(std::string path, std::string content);
+
 #endif
