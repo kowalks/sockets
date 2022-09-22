@@ -2,7 +2,7 @@ CXX=g++
 CXXOPTIMIZE= -O2
 CXXFLAGS= -g -Wall -pthread -std=c++11 $(CXXOPTIMIZE)
 USERID=cesarmarcondes
-CLASSES=net/url.cpp net/dns.cpp http/protocol.cpp http/request.cpp http/response.cpp  web-client/client.cpp  web-server/server.cpp
+CLASSES=net/url.cpp net/dns.cpp http/protocol.cpp http/request.cpp http/response.cpp  web-client/client.cpp  web-server/server.cpp io/file.cpp
 
 all: server client
 echo-server: 

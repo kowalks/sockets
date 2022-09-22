@@ -1,15 +1,14 @@
-// #include <sys/types.h>
 #include <sys/socket.h>
 // #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <unistd.h>
+#include <thread>
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
 
+#include "../io/file.h"
 #include "server.h"
 
-void WebServer::serve(std::string port) {
+void WebServer::connect(std::string ip, std::string port) {
     // creating TCP socket
     sockfd = socket(AF_INET, SOCK_STREAM, 0);
 
@@ -38,65 +37,69 @@ void WebServer::serve(std::string port) {
         perror("listen");
         exit(3);
     }
+}
 
-    // accept connection
+HTTPReq WebServer::receive(int *clisockfd) {
     struct sockaddr_in clientAddr;
     socklen_t clientAddrSize = sizeof(clientAddr);
-    int clientSockfd = accept(sockfd, (struct sockaddr*)&clientAddr, &clientAddrSize);
 
-    if (clientSockfd == -1) {
+    // accept connection at welcome socket
+    *clisockfd = accept(sockfd, (struct sockaddr*)&clientAddr, &clientAddrSize);
+    if (*clisockfd == -1) {
         perror("accept");
         exit(4);
     }
 
-    // displays client ip
+    // client info
     char ipstr[INET_ADDRSTRLEN] = {'\0'};
     inet_ntop(clientAddr.sin_family, &clientAddr.sin_addr, ipstr, sizeof(ipstr));
     std::cout << "Accept a connection from: " << ipstr
          << ":" << ntohs(clientAddr.sin_port) << std::endl;
 
-
-    while(true) {
-        // receive and parse request
-        char buf[65535] = {0};
-        if (recv(clientSockfd, buf, 65535, 0) == -1) {
-            perror("recv");
-            exit(5);
-        }
-        HTTPReq req(buf);
-
-        // send response
-        if (req.method == HTTPReq::GET) {
-            auto path = req.url.getPath();
-            path = path.insert(0, ".");
-            std::cout << "Serving file at " << path << std::endl;
-            std::ifstream file(path);
-            std::string body;
-
-            std::ostringstream ss;
-            ss << file.rdbuf();
-            body = ss.str();
-
-            std::cout << "body:" << body;
-
-            HTTPResp resp;
-            resp.setStatusCode(200);
-            resp.setReasonPhrase("OK");
-            resp.setBody(body);
-
-            std::string message = resp.encode();
-            if (send(clientSockfd, message.data(), message.size(), 0) == -1) {
-                perror("send");
-                return exit(6);
-            }
-            
-            
-            std::cout << "sent message:" << std::endl << message << "$";
-
-        }
-
-        break;
+    // receive request at welcome socket
+    char buf[65535] = {0};
+    if (recv(*clisockfd, buf, 65535, 0) == -1) {
+        perror("recv");
+        exit(5);
     }
 
-    
+    // constructs request
+    HTTPReq req(buf);
+    return req;
+}
+
+void WebServer::dispatch(HTTPResp (*serve)(HTTPReq), HTTPReq req, int clisockfd) {
+    //executing serve function
+    HTTPResp resp = (*serve)(req);
+
+    // sending response message
+    std::string message = resp.encode();
+    if (::send(clisockfd, message.data(), message.size(), 0) == -1) {
+        perror("send");
+        return exit(6);
+    }
+
+    close(clisockfd);  
+}
+
+HTTPResp WebServer::serveLocalFiles(HTTPReq req) {
+    HTTPResp resp;
+
+    if (req.method == HTTPReq::GET) {
+        auto path = req.url.getPath();
+        auto body = rtrvfile(path);
+        if (body.empty()) {
+            resp.setStatusCode(404);
+            std::cout << "\tstatus code 404 Not Found" << std::endl;
+        } else {
+            resp.setStatusCode(200);
+            std::cout << "\tstatus code 200 OK" << std::endl;
+            resp.setBody(body);
+        }
+    } else {
+        resp.setStatusCode(405);
+        std::cout << "\tstatus code 405 Method Not Allowed" << std::endl;
+    }
+
+    return resp;
 }

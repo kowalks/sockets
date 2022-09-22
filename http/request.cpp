@@ -45,28 +45,21 @@ void HTTPReq::parse(std::string buff) {
     headers_ = head.substr(pos+2); // TODO: parse headers into header map
     auto requestLine = head.substr(0, pos);
 
-    std::cout << "requestLine: " << requestLine << std::endl;
-    std::cout << "headers: " << headers_ << std::endl;
-
     // processing request line (TODO: parse URL)
     pos = requestLine.find(" ");
     method = stringToMethod[requestLine.substr(0,pos)];
     requestLine = requestLine.substr(pos+1);
 
-    std::cout << "method: " << method << std::endl;
-
     pos = requestLine.find(" ");
-    url = Url(requestLine.substr(0,pos));
+    url = Url("http://127.0.0.1" + requestLine.substr(0,pos));
     requestLine = requestLine.substr(pos+1);
 
     pos = requestLine.find(" ");
     auto protocol = requestLine.substr(pos+1);
 
-    std::cout << "protocol: " << protocol << std::endl;
-
     if (protocol != protocolVersion) {
-        std::cout << "Received protocol '" << protocol << "' is not supported." << std::endl;
-        // exit(10);
+        std::cout << "\tReceived protocol '" << protocol << "' is not supported." << std::endl;
+        std::cout << "\tInterpreting it as 'HTTP/1.0'." << std::endl;
     }
 }
 
