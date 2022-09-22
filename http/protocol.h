@@ -4,13 +4,13 @@
 #include <iostream>
 
 class HTTPProtocol {
-    std::string protocolVersion = "HTTP/1.1";
+    
+protected:
+    std::string protocolVersion = "HTTP/1.0";
+    std::string message;
 
 public:
-    enum Method { GET, POST, PUT, DELETE, HEAD };
-    friend std::ostream& operator<<(std::ostream& os, Method m);
-
-    std::string getProtocolVersion() { return protocolVersion; };
+    friend std::ostream& operator<<(std::ostream& os, HTTPProtocol p) { return os << p.message; };
 };
 
 #endif

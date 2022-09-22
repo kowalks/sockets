@@ -8,19 +8,38 @@
 #include "protocol.h"
 #include "../net/url.h"
 
-class HTTPReq : HTTPProtocol {
-    Method method;
-    Url url;
-    std::map <std::string, std::string> headers;
-    std::string data;
+class HTTPReq : public HTTPProtocol {
 
 public:
+    enum Method { GET, POST, PUT, DELETE, HEAD } method;
+    Url url;
+
+private:
+    std::map <std::string, std::string> headers;
+    std::string headers_;
+    std::string body;
+
+    std::map<std::string, Method> stringToMethod {
+        {"GET", GET},
+        {"POST", POST},
+        {"PUT", PUT},
+        {"DELETE", DELETE},
+        {"HEAD", HEAD},
+    };
+
+public:
+    HTTPReq() {};
+    HTTPReq(std::string buff) { parse(buff); };
+    HTTPReq(char *buff) { parse(std::string(buff)); };
+    
+    void parse(std::string buff);
     std::string encode();
     std::vector <uint8_t> bytecode();
 
     void setURL(Url url) { this->url = url; }
-    void setMethod(Method method) { this->method = method; }
     void setHeader(std::string key, std::string value) { this->headers[key] = value; }
+
+    friend std::ostream& operator<<(std::ostream& os, Method m);
 };
 
 #endif

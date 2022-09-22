@@ -40,7 +40,7 @@ void Url::parse(std::string url) {
         url = url.substr(0,pos);
     }
 
-    if (url.substr(0,2).compare("//") == 0) {
+    if (url.substr(0,2) == "//") {
         url = url.substr(2);
         if ((pos = url.find("/")) != std::string::npos) {
             parseAuth(url.substr(0,pos));

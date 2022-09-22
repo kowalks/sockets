@@ -4,6 +4,12 @@ Socket programming abstractions for C++. It includes a web client that makes HTT
 
 # Instructions
 
+The build can be made with cmake.
+
+```
+make all
+```
+
 The client makes one or more HTTP GET requests to provided URLs and saves received data into local directory.
 
 ```

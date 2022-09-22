@@ -65,7 +65,7 @@ HTTPResp WebClient::send(HTTPReq req, int buffersize) {
     do {
         status = recv(sockfd, buf.data(), buf.size(), 0);
         message.append(buf.data(), status);
-    } while(status > 0 and not (buf[status-2]=='\r' and buf[status-1]=='\n'));
+    } while(status > 0);
 
     if (status== -1) {
         perror("recv");

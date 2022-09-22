@@ -2,9 +2,9 @@ CXX=g++
 CXXOPTIMIZE= -O2
 CXXFLAGS= -g -Wall -pthread -std=c++11 $(CXXOPTIMIZE)
 USERID=cesarmarcondes
-CLASSES=net/url.cpp net/dns.cpp http/protocol.cpp http/request.cpp http/response.cpp  web-client/client.cpp
+CLASSES=net/url.cpp net/dns.cpp http/protocol.cpp http/request.cpp http/response.cpp  web-client/client.cpp  web-server/server.cpp
 
-all: echo-server echo-client multi-thread showip
+all: server client
 echo-server: 
 	$(CXX) -o $@ $^ $(CXXFLAGS) $@.cpp
 echo-client: 
@@ -20,7 +20,7 @@ tarball: clean
 
 
 server: $(CLASSES)
-	$(CXX) -o $@ $^ $(CXXFLAGS) ./web-server/$@.cpp
+	$(CXX) -o $@ $^ $(CXXFLAGS) ./web-server/main.cpp
 
 client: $(CLASSES)
 	$(CXX) -o $@ $^ $(CXXFLAGS) ./web-client/main.cpp

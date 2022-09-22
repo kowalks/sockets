@@ -8,7 +8,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "../http/protocol.h"
 #include "../http/request.h"
 #include "../http/response.h"   
 #include "../net/dns.h"
@@ -38,8 +37,8 @@ int main (int argc, char *argv[]) {
 
     // building the request
     HTTPReq req;
-    req.setMethod(HTTPProtocol::GET);
-    req.setURL(url);
+    req.method = HTTPReq::GET;
+    req.url = url;
 
     // sending request and receiving response
     HTTPResp resp = client.send(req);
@@ -47,7 +46,7 @@ int main (int argc, char *argv[]) {
 
     // saving into local dir (full response request)
     std::string path = url.getPath();
-    if (path.empty() or path.compare("/") == 0)
+    if (path.empty() or path == "/")
         path = "index.html";
     else path.insert(0, ".");
     std::cout << "Saving received message into " << path << std::endl;
