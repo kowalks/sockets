@@ -1,38 +1,31 @@
-#include <sys/socket.h>
-// #include <sys/types.h>
-// #include <netinet/in.h>
-// #include <arpa/inet.h>
 #include <string.h>
 #include <thread>
-// #include <netdb.h>
-// #include <errno.h>
-// #include <unistd.h>
 
-#include <fstream>
-#include <iostream>
-#include <sstream>
-
-// #include "../http/protocol.h"
+#include "../net/dns.h"
 #include "../http/request.h"
 #include "../http/response.h"
 #include "server.h"
 
 
 int main (int argc, char *argv[]) {
-//     if (argc != 4) {
-// std::cout << argc << "<<<<\n";
-//         fprintf(stderr, "usage: %s [host] [port] [dir]\n", argv[0]);
-//         exit(-1);
-//     }
+    if (argc != 4) {
+        fprintf(stderr, "usage: %s [host] [port] [dir]\n", argv[0]);
+        exit(-1);
+    }
 
-    // const char *host = argv[1];
-    // std::string dir = argv[3];
-    // int port = std::stoi(argv[2]);
+    std::string host = argv[1];
+    std::string port = argv[2];
+    std::string dir = argv[3];
+
+    // choosing first ip from now on.
+    std::vector <std::string> ips = dns_resolution(host, port);
+    std::string ip = ips[0];
 
     WebServer server;
+    server.chdir(dir);
 
     // open connection and listen to socket
-    server.connect("127.0.0.1", "8000");
+    server.connect(ip, port);
 
     // receive connection and multithread dispatch
     int sockfd;

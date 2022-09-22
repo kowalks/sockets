@@ -8,6 +8,7 @@ class WebServer {
     int sockfd;
 
 public:
+    void chdir(std::string dir);
     void connect(std::string ip, std::string port);
     HTTPReq receive(int* clisockfd);
     

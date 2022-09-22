@@ -20,32 +20,34 @@ int main (int argc, char *argv[]) {
         exit(-1);
     }
 
-    Url url(argv[1]);
+    for (int i=1; i < argc; i++) {
+        Url url(argv[i]);
 
-    std::string host = url.getHost();
-    std::string port = url.getPort();
-    if (port.length() == 0)
-        port = "80";
+        std::string host = url.getHost();
+        std::string port = url.getPort();
+        if (port.length() == 0)
+            port = "80";
 
-    std::vector <std::string> ips = dns_resolution(host, port);
+        // choosing first ip from now on.
+        std::vector <std::string> ips = dns_resolution(host, port);
+        std::string ip = ips[0];
 
-    // choosing first ip from now on.
-    std::string ip = ips[0];
+        WebClient client;
+        // connecting with tcp to ip:port
+        client.connect(ip, port);
 
-    WebClient client;
-    client.connect(ip, port);
+        // building the request
+        HTTPReq req(HTTPReq::GET, url);
 
-    // building the request
-    HTTPReq req(HTTPReq::GET, url);
+        // sending request and receiving response
+        HTTPResp resp = client.send(req);
 
-    // sending request and receiving response
-    HTTPResp resp = client.send(req);
+        // saving into local dir (full response request)
+        WebClient::saveLocal(resp, url);
 
-    // saving into local dir (full response request)
-    WebClient::saveLocal(resp, url);
-
-    // closing connection
-    client.disconnect();
+        // closing connection
+        client.disconnect();
+    }
 
     return 0;
 }
