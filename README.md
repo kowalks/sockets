@@ -19,7 +19,7 @@ The client makes one or more HTTP GET requests to provided URLs and saves receiv
 The server listens for HTTP GET requests and send local files to client.
 
 ```
-./server [host] [port] [dir]
+./server host port dir
 ```
 
 

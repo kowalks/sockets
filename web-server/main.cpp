@@ -9,7 +9,7 @@
 
 int main (int argc, char *argv[]) {
     if (argc != 4) {
-        fprintf(stderr, "usage: %s [host] [port] [dir]\n", argv[0]);
+        fprintf(stderr, "usage: %s host port dir\n", argv[0]);
         exit(-1);
     }
 
