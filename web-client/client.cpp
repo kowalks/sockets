@@ -26,6 +26,7 @@ void WebClient::connect(std::string ip, std::string port) {
     // connecting to server from socket
     if (::connect(sockfd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) == -1) {
         perror("connect");
+        std::cout << "Did you forget 'http://' ?" << std::endl;
         exit(2);
     }
 

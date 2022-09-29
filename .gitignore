@@ -34,3 +34,4 @@
 # IDE
 .vagrant/
 .vscode/
+.DS_Store
